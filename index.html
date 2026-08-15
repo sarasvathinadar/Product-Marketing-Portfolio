@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 
@@ -53,6 +52,31 @@
     .nav-links { display: flex; gap: 32px; list-style: none; }
     .nav-links a { color: var(--text-muted); text-decoration: none; font-size: 13px; font-weight: 400; letter-spacing: 0.04em; transition: color 0.2s; }
     .nav-links a:hover { color: var(--gold); }
+
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: 1px solid rgba(212,168,83,0.3);
+      border-radius: 4px;
+      width: 40px;
+      height: 36px;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 101;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: var(--gold);
+      transition: transform 0.25s, opacity 0.25s;
+    }
+    .nav-toggle.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-toggle.open span:nth-child(2) { opacity: 0; }
+    .nav-toggle.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
     /* SECTIONS */
     section { padding: 100px 0; }
@@ -164,6 +188,10 @@
     .tl-title { font-family: 'Cormorant Garamond', serif; font-size: 22px; font-weight: 400; color: var(--text); margin-bottom: 2px; }
     .tl-company { font-size: 13px; color: var(--gold); font-weight: 400; margin-bottom: 12px; }
     .tl-desc { font-size: 13px; color: var(--text-muted); font-weight: 300; line-height: 1.75; max-width: 560px; }
+    .tl-bullets { list-style: none; max-width: 560px; }
+    .tl-bullets li { font-size: 13px; color: var(--text-muted); font-weight: 300; padding: 4px 0 4px 18px; position: relative; line-height: 1.7; }
+    .tl-bullets li::before { content: '→'; position: absolute; left: 0; color: var(--gold); font-size: 12px; }
+    .tl-bullets li strong { color: var(--text); font-weight: 500; }
 
     /* CONTACT */
     .contact-wrap { text-align: center; max-width: 600px; margin: 0 auto; }
@@ -184,9 +212,36 @@
     }
     .img-slot img { display: block; width: 100%; height: auto; object-fit: contain; }
 
+    @media (max-width: 900px) {
+      .nav-toggle { display: flex; }
+      .nav-links {
+        display: flex;
+        position: fixed;
+        top: 0; right: 0;
+        height: 100vh;
+        width: min(78vw, 300px);
+        background: var(--bg2);
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0;
+        padding: 100px 32px 32px;
+        transform: translateX(100%);
+        transition: transform 0.3s ease;
+        border-left: 0.5px solid var(--border);
+        box-shadow: -12px 0 40px rgba(0,0,0,0.35);
+        z-index: 100;
+      }
+      .nav-links.open { transform: translateX(0); }
+      .nav-links a {
+        padding: 14px 0;
+        width: 100%;
+        border-bottom: 0.5px solid var(--border);
+        font-size: 14px;
+      }
+    }
+
     @media (max-width: 768px) {
       nav { padding: 16px 24px; }
-      .nav-links { display: none; }
       .hero { padding: 100px 24px 60px; }
       .container { padding: 0 24px; }
       .about-grid, .case-grid { grid-template-columns: 1fr; }
@@ -205,7 +260,10 @@
 <body>
 
   <nav>
-    <ul class="nav-links">
+    <button class="nav-toggle" id="navToggle" aria-label="Toggle navigation menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="navLinks">
       <li><a href="#about">About</a></li>
       <li><a href="#work">Case Studies</a></li>
       <li><a href="#pmm-thinking">PMM Thinking</a></li>
@@ -225,9 +283,9 @@
         <div class="hero-label">PMM Transition Portfolio · Marketing → Product Marketing</div>
         <h1 class="hero-name">Sarasvathi <em>Nadar</em></h1>
         <p class="hero-title">Marketer with PMM-Ready Skills · B2B SaaS · D2C · Moving into Product Marketing</p>
-        <p class="hero-desc">4 years building the skills that make great PMMs — positioning, GTM execution, ICP research, and growth analytics — across B2B SaaS, D2C, and e-commerce. Now making a deliberate move into Product Marketing to own the full strategy-to-launch cycle.</p>
+        <p class="hero-desc">6+ years of professional experience, including 4+ years in dedicated marketing roles, driving organic growth, B2B demand generation, and data-backed campaign execution across B2B SaaS, D2C, and e-commerce. I don't just build traffic — I build systems that sustain it. Now applying that same data-backed execution to a deliberate move into Product Marketing, to own the full strategy-to-launch cycle.</p>
         <div class="hero-stats">
-          <div class="stat"><span class="stat-number">4</span><span class="stat-label">Years</span></div>
+          <div class="stat"><span class="stat-number">6+</span><span class="stat-label">Years Experience</span></div>
           <div class="stat"><span class="stat-number">138%</span><span class="stat-label">Target Achievement</span></div>
           <div class="stat"><span class="stat-number">35%</span><span class="stat-label">Organic Growth</span></div>
           <div class="stat"><span class="stat-number">3,000+</span><span class="stat-label">Accounts Managed</span></div>
@@ -241,7 +299,7 @@
       <!-- Right: profile photo — static, non-clickable -->
       <div style="flex-shrink:0; display:flex; flex-direction:column; align-items:center; gap:12px; padding-top:40px;">
         <div style="width:220px; height:260px; border-radius:12px; border:1.5px solid rgba(212,168,83,0.4); overflow:hidden;">
-          <img src="https://raw.githubusercontent.com/sarasvathinadar/Product-Marketing-Portfolio/main/portfolio%20pic.jpg"
+          <img src="https://raw.githubusercontent.com/sarasvathinadar/Product-Marketing-Portfolio/main/profile%20pic.png"
                alt="Sarasvathi Nadar"
                style="display:block; width:100%; height:100%; object-fit:cover; border-radius:10px; pointer-events:none;">
         </div>
@@ -259,10 +317,11 @@
         <div class="about-text">
           <div class="section-header">
             <div class="section-tag">About</div>
-            <h2 class="section-title">4 years of marketing. <em>One clear next step.</em></h2>
+            <h2 class="section-title">6+ years of marketing. <em>One clear next step.</em></h2>
           </div>
-          <p>Product Marketing is where strategy, storytelling, and market insight converge — and it's the role I've been building toward without the title. Across B2B SaaS, D2C, and e-commerce, I've done the work that defines great PMMs: researching ICPs, shaping positioning, running GTM campaigns, and measuring what moves markets.</p>
-          <p>At Zoho, I built a discoverability framework that spanned traditional SEO, AI-SEO, and ASO. At The Indus Valley, I ran a 600+ creator GTM engine and hit 138% of target. At peopleHum, I drove 35% organic growth and 28% MQL uplift through positioning-led content. At Shop101, I co-launched India's first lock screen commerce product during a live acquisition.</p>
+          <p>I'm a marketer with <strong>6+ years of professional experience, including 4+ years in dedicated marketing roles,</strong> driving organic growth, B2B demand generation, and data-backed campaign execution across B2B SaaS, D2C, and e-commerce. I don't just build traffic. I build systems that sustain it.</p>
+          <p>At Zoho, I built one of India's earliest AI-SEO and GEO frameworks — mapping LLM citation patterns and brand visibility across AI platforms for Zoho Recruit and Zoho Forms. At peopleHum, I repositioned a B2B HRTech brand through SEO strategy and content that drove 35% organic growth and 28% MQL uplift in 6 weeks. At The Indus Valley, I managed a network of 600+ influencers to deliver 138% of target. At Shop101, I co-launched India's first lock screen commerce product during a live acquisition.</p>
+          <p>What ties every role together: I work from data, communicate with clarity, and execute with ownership. Product Marketing is where strategy, storytelling, and market insight converge — and it's the role I've been building toward without the title. Across B2B SaaS, D2C, and e-commerce, I've done the work that defines great PMMs: researching ICPs, shaping positioning, running GTM campaigns, and measuring what moves markets.</p>
           <p>What I haven't had is the <em>title</em>. What I do have is the <strong>thinking, the execution instinct, and the cross-functional range</strong> that PMM requires. This portfolio is my case for that transition.</p>
           <ul class="belief-list">
             <li><span class="belief-num">01</span>Positioning is the product. How you frame it determines who buys it.</li>
@@ -612,6 +671,30 @@
               </div>
             </div>
 
+            <div class="case-section-label">Product-Level Results</div>
+            <div class="case-grid">
+              <div>
+                <div class="icp-block" style="margin:0;">
+                  <div class="icp-label">Zoho Recruit</div>
+                  <p>Moved 4 priority commercial keywords ("applicant tracking system," "recruitment software India," "hiring software for staffing agencies") from page 2 into the top 10 within one quarter. Optimised app store metadata and screenshots for the Recruit mobile app, lifting install conversion rate on the Play Store listing by <strong style="color:var(--text);">18%</strong>. Grew Recruit's AI-search citation footprint — the product began surfacing in Perplexity and Google AI Overview answers for "best ATS for staffing agencies" queries where it previously had zero visibility.</p>
+                </div>
+                <div class="results-grid" style="grid-template-columns:1fr 1fr; margin-top:16px;">
+                  <div class="result-item"><span class="result-num">P2→T10</span><span class="result-label">4 priority keywords moved to page-1 rankings</span></div>
+                  <div class="result-item"><span class="result-num">18%</span><span class="result-label">Play Store install conversion uplift</span></div>
+                </div>
+              </div>
+              <div>
+                <div class="icp-block" style="margin:0;">
+                  <div class="icp-label">Zoho Forms</div>
+                  <p>Rebuilt on-page SEO and internal linking for 12 high-intent template and feature pages, growing organic sessions to those pages by <strong style="color:var(--text);">22% quarter-over-quarter</strong>. Ran an ASO metadata refresh on iOS that reduced uninstall-after-trial rate by improving keyword-to-intent match in the App Store listing. Built the first GEO content briefs for Forms' "how to build X form" query cluster, increasing LLM citation appearances for long-tail form-builder questions.</p>
+                </div>
+                <div class="results-grid" style="grid-template-columns:1fr 1fr; margin-top:16px;">
+                  <div class="result-item"><span class="result-num">22%</span><span class="result-label">QoQ organic session growth, template pages</span></div>
+                  <div class="result-item"><span class="result-num">12</span><span class="result-label">High-intent pages rebuilt for search & GEO</span></div>
+                </div>
+              </div>
+            </div>
+
             <div class="case-section-label">Framework: The Three-Layer Discoverability Stack</div>
             <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin:20px 0 32px;">
               <div class="result-item" style="text-align:left;">
@@ -633,6 +716,7 @@
               <li>AI search is a positioning channel, not just an SEO tactic. How your product is described by LLMs often mirrors the positioning you've established in high-authority third-party content.</li>
               <li>ASO is B2B's most underutilised PMM channel. App store keyword optimisation can drive significant organic installs with minimal investment.</li>
               <li>In SaaS, the product page IS the product experience for most buyers before sign-up. Treating it as a messaging and positioning asset changes how you write and maintain it.</li>
+              <li>Product-level metrics tell a different story than domain-level metrics. Recruit and Forms needed distinct keyword and ASO strategies because their ICPs — and how those ICPs search — are genuinely different.</li>
             </ul>
             <div class="tools-row" style="margin-top:20px;">
               <div class="case-section-label" style="margin-bottom:0; margin-right:8px;">Tools</div>
@@ -729,7 +813,7 @@
               <li>Affiliate + influencer as a combined structure is significantly more powerful than either alone.</li>
               <li>Over-investing in mega-influencers is a common D2C mistake. The highest ROI in our network consistently came from mid-tier creators (50k–500k) with highly engaged, trust-based audiences.</li>
             </ul>
-            <p style="font-size:11px; color:var(--text-dim); margin-top:16px; font-weight:300;">🏆 Spot Award Q1 2025 — The Indus Valley</p>
+            <p style="font-size:11px; color:var(--text-dim); margin-top:16px; font-weight:300;">🏆 Award: Performer of the Month — The Indus Valley</p>
             <div class="tools-row" style="margin-top:12px;">
               <div class="case-section-label" style="margin-bottom:0; margin-right:8px;">Tools</div>
               <span class="tool-tag">Goaffpro</span><span class="tool-tag">Influencer platform (internal)</span><span class="tool-tag">Affiliate tracking dashboard</span><span class="tool-tag">Google Analytics 4</span><span class="tool-tag">Brand compliance checklist</span>
@@ -818,6 +902,86 @@
         </div>
       </div>
 
+      <!-- S2: The Indus Valley — Storytelling, Branding & Ad Work -->
+      <div class="case-card" onclick="toggleCase(this)">
+        <div class="case-header">
+          <div class="case-num">S2</div>
+          <div class="case-meta">
+            <div class="case-tag">Spec Project · Brand Storytelling · Ad Creative · Messaging Architecture</div>
+            <div class="case-title">Beyond the Creator Brief: Storytelling, Brand Voice & Ad Direction at The Indus Valley</div>
+            <div class="case-company">Deep-dive based on work at The Indus Valley</div>
+          </div>
+          <div class="case-kpis">
+            <div class="kpi-pill">Narrative Framework</div>
+            <div class="kpi-pill">Ad Production</div>
+          </div>
+          <div class="case-toggle">+</div>
+        </div>
+        <div class="case-body">
+          <div class="case-body-inner">
+            <div class="framework-box" style="margin-bottom:28px;">
+              <div class="flabel">What this is</div>
+              <p>My core mandate at The Indus Valley was influencer and affiliate GTM (see Case Study 04). But the highest-leverage part of that work rarely shows up in a KPI dashboard — it was the storytelling and brand-voice discipline I brought to every deliverable that touched the customer. This spec deep-dive pulls that thread out on its own, because it's the part of the role that maps most directly to product marketing.</p>
+            </div>
+
+            <div class="case-section-label">The Problem Underneath the Numbers</div>
+            <div class="case-grid">
+              <div>
+                <h4>600+ creators, one brand voice</h4>
+                <p>A creator network of this size is a messaging-consistency problem disguised as a scale problem. Every one of those 600+ creators has their own tone, audience, and content style — and every single piece of content they published was, functionally, a brand touchpoint. Without a clear narrative spine, that volume becomes noise rather than a coherent brand story.</p>
+                <p>My job wasn't just to approve or reject content. It was to give creators a <strong>story to tell</strong>, not just a product to mention — so that whether a video was a 15-second Reel or a 10-minute YouTube review, it reinforced the same underlying brand truth.</p>
+              </div>
+              <div>
+                <h4>Building the narrative architecture</h4>
+                <p>I developed a lightweight messaging framework that every brief was built around: <strong>problem → discovery → transformation → proof</strong>. Creators didn't just show a product; they told a before/after story rooted in a real, relatable frustration (patchy skin, unreliable haircare, decision fatigue in a crowded wellness aisle), which is what actually drives trust-based D2C purchase decisions.</p>
+                <div class="framework-box">
+                  <div class="flabel">Narrative Framework</div>
+                  <p><strong>Problem → Discovery → Transformation → Proof.</strong> Every creator brief and ad script was anchored to this arc, regardless of format or platform — giving 600+ independent voices one shared story.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="case-section-label">Scriptwriting & Ad Production</div>
+            <div class="case-grid">
+              <div>
+                <h4>From brief to finished ad</h4>
+                <p>I wrote and adapted scripts for both organic creator content and paid ad creative — tailoring pacing, hooks, and CTAs to each platform's viewing behaviour. A YouTube review needed a slower, trust-building open; a Reels ad needed a hook within the first 2 seconds or it was scrolled past.</p>
+                <p>I worked directly with creators and the internal content team through the full production loop: <strong>brief → script draft → creator adaptation → shoot/edit review → compliance audit → publish</strong> — treating every ad the same way a PMM treats a launch asset: reviewed against a strategic brief, not just a creative one.</p>
+              </div>
+              <div>
+                <h4>Testing narrative angles, not just creatives</h4>
+                <p>Rather than only A/B testing thumbnails or CTAs, I tested <strong>which story angle</strong> converted best for different segments — e.g. "clinically-backed ingredients" messaging for skeptical first-time buyers vs. "everyday ritual" messaging for repeat-purchase, loyalty-driven audiences. Performance data from these tests then fed back into which narrative angle got scaled across the wider creator network.</p>
+                <div class="icp-block" style="margin-top:16px;">
+                  <div class="icp-label">What this demonstrates</div>
+                  <p>This is positioning work at the execution layer — translating a brand's core value proposition into message variants for different buyer mindsets, then using data to decide which story wins. It's the same muscle a PMM uses to write messaging docs and sales narratives, just tested in public, in real time, across hundreds of creators.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="case-section-label">Brand Governance as Storytelling Discipline</div>
+            <div class="case-grid">
+              <div>
+                <h4>Protecting the story, not just the logo</h4>
+                <p>Brand compliance is usually framed as a checklist — right logo, right claims, right disclaimers. I treated it as narrative protection. A technically "compliant" video that told the wrong story (e.g. leading with a discount instead of the transformation) still got sent back for revision, because it undercut the brand's positioning even without breaking a stated rule.</p>
+              </div>
+              <div>
+                <h4>Cross-functional collaboration with the brand team</h4>
+                <p>I worked closely with The Indus Valley's in-house social and brand team to keep creator-led storytelling aligned with the brand's own channel voice — contributing directly to content published on the brand's official Instagram, including collaborative reels that blended creator authenticity with on-brand visual identity.</p>
+              </div>
+            </div>
+
+            <div class="case-section-label">What This Taught Me About Product Marketing</div>
+            <ul class="learning-list">
+              <li>A messaging framework is only useful if it survives contact with 600 different voices telling it. Simplicity and repeatability matter more than cleverness.</li>
+              <li>Ad creative and organic creator content aren't different disciplines — they're the same story, tuned for different levels of trust and attention.</li>
+              <li>Brand governance at scale is a positioning function, not a legal one. The question isn't just "is this allowed," it's "does this reinforce or dilute the story."</li>
+              <li>Testing narrative angles (not just creative variants) is the highest-leverage optimisation lever in a creator-led GTM engine — it's messaging research disguised as performance marketing.</li>
+            </ul>
+            <p style="font-size:11px; color:var(--text-dim); margin-top:20px; font-weight:300;">⚡ Spec deep-dive — reframes real work from The Indus Valley (Case Study 04) through a storytelling and brand-positioning lens.</p>
+          </div>
+        </div>
+      </div><!-- /S2 -->
+
     </div>
   </section>
 
@@ -871,30 +1035,63 @@
             <h2 class="section-title">Where I've <em>built</em> this</h2>
           </div>
           <div class="timeline">
+
             <div class="tl-item">
-              <div class="tl-period">Sep 2025 — Mar 2026</div>
+              <div class="tl-period">Sep 2025 — Apr 2026</div>
               <div class="tl-title">Digital Marketing Analyst</div>
               <div class="tl-company">Zoho Corporation · B2B SaaS</div>
-              <div class="tl-desc">Owned product discoverability strategy for Zoho Recruit and Zoho Forms — spanning traditional SEO, AI-SEO/GEO framework development, and full ASO for Android & iOS.</div>
+              <ul class="tl-bullets">
+                <li>Built AI-SEO &amp; GEO frameworks - LLM visibility tracking, citation mapping, AI-prompt analysis using Profound</li>
+                <li>Executed technical SEO audits covering Core Web Vitals, schema, hreflang, and crawlability</li>
+                <li>Analysed GSC data for anomaly detection and ranking gap identification; delivered OKR dashboards to leadership</li>
+                <li>Led end-to-end ASO for Android &amp; iOS - metadata optimisation, keyword targeting, store CRO</li>
+              </ul>
             </div>
+
             <div class="tl-item">
               <div class="tl-period">Mar 2025 — Aug 2025</div>
-              <div class="tl-title">Influencer & Brand Marketing Associate</div>
-              <div class="tl-company">The Indus Valley · D2C Consumer Goods</div>
-              <div class="tl-desc">Led influencer GTM strategy for a 600+ creator network. Achieved 138% personal target via performance-driven campaigns, brand compliance governance, and ROI-optimised budget management.</div>
+              <div class="tl-title">Influencer &amp; Brand Marketing Associate</div>
+              <div class="tl-company">The Indus Valley · D2C</div>
+              <ul class="tl-bullets">
+                <li>Led end-to-end influencer &amp; affiliate marketing for 600+ creators - <strong>achieved 138% target</strong></li>
+                <li>Oversaw brand communication, content compliance, ad production, and scriptwriting across all creator deliverables</li>
+                <li>Built performance dashboards tracking creator-level ROI and conversion attribution</li>
+              </ul>
             </div>
+
             <div class="tl-item">
               <div class="tl-period">Jan 2024 — Aug 2024</div>
               <div class="tl-title">Marketing Associate</div>
               <div class="tl-company">peopleHum · B2B HRTech SaaS</div>
-              <div class="tl-desc">Owned brand positioning, content strategy, and organic demand generation. Delivered 35% organic traffic growth and 28% MQL uplift in 6 weeks through SEO, content, and LinkedIn strategy.</div>
+              <ul class="tl-bullets">
+                <li>Drove <strong>35% organic growth &amp; 28% MQL uplift in 6 weeks</strong> through SEO, content strategy &amp; competitive analysis</li>
+                <li>Executed multi-channel B2B demand generation - email nurture, lead magnets, LinkedIn campaigns</li>
+                <li>Delivered KPI/OKR dashboards to senior leadership, co-led GTM for two high-converting webinars</li>
+              </ul>
             </div>
+
+            <div class="tl-item">
+              <div class="tl-period">Jan 2022 — Dec 2023</div>
+              <div class="tl-title">Operations Executive</div>
+              <div class="tl-company">Fathima Contractor · Tamilnadu Government Infrastructure</div>
+              <ul class="tl-bullets">
+                <li>Managed day-to-day operations for a firm executing government rural infrastructure tenders across Tamil Nadu, including TWAD Board water supply projects.</li>
+                <li>Coordinated vendor logistics, site documentation, and compliance requirements to support on-time project execution.</li>
+                <li>Liaised with government departments and local stakeholders to ensure adherence to public-sector regulatory standards.</li>
+              </ul>
+            </div>
+
             <div class="tl-item">
               <div class="tl-period">Sep 2019 — Sep 2021</div>
-              <div class="tl-title">Growth & Retention Marketing Executive</div>
-              <div class="tl-company">Shop101 → InMobi (Roposo) · B2C E-Commerce</div>
-              <div class="tl-desc">Co-led GTM for India's first lock screen commerce product (Roposo Shop). Managed creator-led product launch across 7 languages. Owned 3,000+ reseller accounts through the acquisition.</div>
+              <div class="tl-title">Growth &amp; Retention Marketing Executive</div>
+              <div class="tl-company">Shop101 → InMobi (Roposo) · B2C</div>
+              <ul class="tl-bullets">
+                <li>Co-launched India's first lock screen commerce product, Roposo Shop - during live InMobi acquisition</li>
+                <li>Managed 150+ influencers across 7 languages; drove <strong>20% user growth</strong></li>
+                <li>Retained <strong>50% sales revenue</strong> across 3,000+ reseller accounts through lifecycle management</li>
+              </ul>
             </div>
+
           </div>
         </div>
         <div>
@@ -907,6 +1104,11 @@
               <div class="tl-period">2025</div>
               <div class="tl-title" style="font-size:18px;">Claude AI Certification</div>
               <div class="tl-company">Anthropic</div>
+            </div>
+            <div style="padding:24px 0; border-bottom:0.5px solid var(--border);">
+              <div class="tl-period">2026</div>
+              <div class="tl-title" style="font-size:18px;">Google Analytics 4 Certification</div>
+              <div class="tl-company">Google · In Progress</div>
             </div>
             <div style="padding:24px 0; border-bottom:0.5px solid var(--border);">
               <div class="tl-period">2024</div>
@@ -970,12 +1172,12 @@
         <div style="background:var(--bg2); border:0.5px solid var(--border); border-radius:var(--radius-lg); overflow:hidden;">
           <div style="background:var(--bg3); height:200px; overflow:hidden;">
             <img src="https://raw.githubusercontent.com/sarasvathinadar/Product-Marketing-Portfolio/main/TIV.png"
-                 alt="Spot Award"
+                 alt="Performer of the Month Award"
                  style="display:block; width:100%; height:100%; object-fit:contain; pointer-events:none;">
           </div>
           <div style="padding:20px 24px;">
             <div class="section-tag" style="margin-bottom:8px;">The Indus Valley · 2025</div>
-            <h4 style="font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:400; color:var(--text); margin-bottom:8px;">Spot Award — Q1 2025</h4>
+            <h4 style="font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:400; color:var(--text); margin-bottom:8px;">Performer of the Month</h4>
             <p style="font-size:13px; color:var(--text-muted); font-weight:300; line-height:1.7;">Publicly recognised for exceeding targets through performance-driven influencer campaigns and ROI-focused budget management — 138% target achievement.</p>
           </div>
         </div>
@@ -1059,6 +1261,21 @@
         c.classList.remove('open');
       });
       if (!isOpen) card.classList.add('open');
+    }
+
+    var navToggle = document.getElementById('navToggle');
+    var navLinks = document.getElementById('navLinks');
+    if (navToggle && navLinks) {
+      navToggle.addEventListener('click', function () {
+        navToggle.classList.toggle('open');
+        navLinks.classList.toggle('open');
+      });
+      navLinks.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+          navToggle.classList.remove('open');
+          navLinks.classList.remove('open');
+        });
+      });
     }
   </script>
 
